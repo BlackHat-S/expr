@@ -1,4 +1,4 @@
-module github.com/BlackHat-S/expr
+module github.com/antonmedv/expr
 
 go 1.13
 
