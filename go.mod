@@ -1,4 +1,4 @@
-module github.com/antonmedv/expr
+module expr
 
 go 1.13
 
