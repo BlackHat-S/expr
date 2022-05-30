@@ -26,7 +26,8 @@ func fetch(from, i interface{}, nilsafe bool) interface{} {
 			return value
 		}
 		if !nilsafe {
-			panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
+			return nil
+			//panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
 		}
 		return nil
 	}
@@ -67,7 +68,8 @@ func fetch(from, i interface{}, nilsafe bool) interface{} {
 		}
 	}
 	if !nilsafe {
-		panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
+		return nil
+		//panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
 	}
 	return nil
 }
