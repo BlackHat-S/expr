@@ -19,60 +19,60 @@ type Fetcher interface {
 	Fetch(interface{}) interface{}
 }
 
-func fetch(from, i interface{}, nilsafe bool) interface{} {
-	if fetcher, ok := from.(Fetcher); ok {
-		value := fetcher.Fetch(i)
-		if value != nil {
-			return value
-		}
-		if !nilsafe {
-			return nil
-			//panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
-		}
-		return nil
-	}
+// func fetch(from, i interface{}, nilsafe bool) interface{} {
+// 	if fetcher, ok := from.(Fetcher); ok {
+// 		value := fetcher.Fetch(i)
+// 		if value != nil {
+// 			return value
+// 		}
+// 		if !nilsafe {
+// 			return nil
+// 			//panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
+// 		}
+// 		return nil
+// 	}
 
-	v := reflect.ValueOf(from)
-	kind := v.Kind()
+// 	v := reflect.ValueOf(from)
+// 	kind := v.Kind()
 
-	// Structures can be access through a pointer or through a value, when they
-	// are accessed through a pointer we don't want to copy them to a value.
-	if kind == reflect.Ptr && reflect.Indirect(v).Kind() == reflect.Struct {
-		v = reflect.Indirect(v)
-		kind = v.Kind()
-	}
+// 	// Structures can be access through a pointer or through a value, when they
+// 	// are accessed through a pointer we don't want to copy them to a value.
+// 	if kind == reflect.Ptr && reflect.Indirect(v).Kind() == reflect.Struct {
+// 		v = reflect.Indirect(v)
+// 		kind = v.Kind()
+// 	}
 
-	switch kind {
+// 	switch kind {
 
-	case reflect.Array, reflect.Slice, reflect.String:
-		value := v.Index(toInt(i))
-		if value.IsValid() && value.CanInterface() {
-			return value.Interface()
-		}
+// 	case reflect.Array, reflect.Slice, reflect.String:
+// 		value := v.Index(toInt(i))
+// 		if value.IsValid() && value.CanInterface() {
+// 			return value.Interface()
+// 		}
 
-	case reflect.Map:
-		value := v.MapIndex(reflect.ValueOf(i))
-		if value.IsValid() {
-			if value.CanInterface() {
-				return value.Interface()
-			}
-		} else {
-			elem := reflect.TypeOf(from).Elem()
-			return reflect.Zero(elem).Interface()
-		}
+// 	case reflect.Map:
+// 		value := v.MapIndex(reflect.ValueOf(i))
+// 		if value.IsValid() {
+// 			if value.CanInterface() {
+// 				return value.Interface()
+// 			}
+// 		} else {
+// 			elem := reflect.TypeOf(from).Elem()
+// 			return reflect.Zero(elem).Interface()
+// 		}
 
-	case reflect.Struct:
-		value := v.FieldByName(reflect.ValueOf(i).String())
-		if value.IsValid() && value.CanInterface() {
-			return value.Interface()
-		}
-	}
-	if !nilsafe {
-		return nil
-		//panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
-	}
-	return nil
-}
+// 	case reflect.Struct:
+// 		value := v.FieldByName(reflect.ValueOf(i).String())
+// 		if value.IsValid() && value.CanInterface() {
+// 			return value.Interface()
+// 		}
+// 	}
+// 	if !nilsafe {
+// 		return nil
+// 		//panic(fmt.Sprintf("cannot fetch %v from %T", i, from))
+// 	}
+// 	return nil
+// }
 
 func slice(array, from, to interface{}) interface{} {
 	v := reflect.ValueOf(array)
